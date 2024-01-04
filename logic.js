@@ -45,6 +45,9 @@ let numButtons = document.querySelectorAll(".numButton")
 numButtons.forEach( (buttonEL) => {
     buttonEL.addEventListener("click", ()=>{
         if(operator == "") {
+            if (result != ""){
+                resetVars()
+            }
             firstNumber += buttonEL.innerText
             updateDisplay(firstNumber)
         }
@@ -64,19 +67,34 @@ let opButtons = document.querySelectorAll(".opButton");
 
 opButtons.forEach((operandButton) => {
     operandButton.addEventListener("click", function() {
+        if (result != ""){
+            firstNumber = result
+            secondNumber = ""
+            result = ""
+        }
+        if (firstNumber != "" && secondNumber != "" && result == ""){
+            firstNumber = operate(operator, parseFloat(firstNumber), parseFloat(secondNumber))
+            secondNumber = ""
+        }
         operator = operandButton.innerText;
     })
 })
 
 let eqButton = document.querySelector(".eqButton");
 eqButton.addEventListener("click", function() {
+    if (firstNumber == "" || secondNumber == "" || operator == ""){
+        resetVars()
+        updateDisplay("Need 2 numbers")
+        return
+    }
     result = operate(operator, parseFloat(firstNumber), parseFloat(secondNumber));
     updateDisplay(result);
+    operator = ""
 })
 
 let clearButton = document.getElementsByClassName("clearButton")[0];
     clearButton.addEventListener("click", function() {
-        updateDisplay("");
+        updateDisplay("0");
         resetVars()
 })
 
